@@ -1,1 +1,1 @@
-## Chat-APP
+## CHATTY - The Chat-APP
