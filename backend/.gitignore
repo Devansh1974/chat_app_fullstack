@@ -1,7 +1,5 @@
-node_modules
 .env
+node_modules
 
-# npm package manager cache
-.npm/
-.pnp/
-.pnp.js
+
+.DS_Store
