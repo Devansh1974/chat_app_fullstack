@@ -16,10 +16,7 @@ dotenv.config();
 const PORT = process.env.PORT;
 const __dirname = path.resolve();
 
-// to update the image upload limit
-app.use(express.json({ limit: '5mb' }));
-app.use(express.urlencoded({ extended: true, limit: '5mb' }));
-
+app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
