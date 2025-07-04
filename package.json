@@ -1,10 +1,10 @@
 {
   "name": "chat_app",
   "version": "1.0.0",
-  "description": "",
+  "description": "**Chatty** is a modern real-time chat application built using the **MERN stack** (MongoDB, Express.js, React.js, Node.js), with **Socket.IO** as the backbone of its instant messaging system. It supports individual and group chats, secure authentication, and a user-friendly interface optimized for all devices.",
   "main": "index.js",
   "scripts": {
-     "build": "npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend",
+    "build": "npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend",
     "start": "npm run start --prefix backend"
   },
   "repository": {
