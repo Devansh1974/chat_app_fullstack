@@ -2,7 +2,7 @@
 
 **Chatty** is a modern, full-stack real-time chat application built using the **MERN** stack (MongoDB, Express.js, React.js, Node.js) with **Socket.IO** for instant messaging. It supports private chats, group messaging, media sharing (images), typing indicators, and theme customization.
 
-🚀 Try it live: [Add deployed link here]
+🚀 Try it live: [https://chatty-onlinechattingapp.onrender.com]
 
 ---
 
