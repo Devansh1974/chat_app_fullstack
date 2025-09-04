@@ -1,10 +1,12 @@
 import { config } from "dotenv";
+import bcrypt from "bcryptjs";
 import { connectDB } from "../lib/db.js";
 import User from "../models/user.model.js";
 
 config();
 
 const seedUsers = [
+  // ... (your user data is here, no changes needed to the array itself)
   // Female Users
   {
     email: "emma.thompson@example.com",
@@ -54,7 +56,6 @@ const seedUsers = [
     password: "123456",
     profilePic: "https://randomuser.me/api/portraits/women/8.jpg",
   },
-
   // Male Users
   {
     email: "james.anderson@example.com",
@@ -103,11 +104,26 @@ const seedUsers = [
 const seedDatabase = async () => {
   try {
     await connectDB();
+    // ‼️ IMPORTANT: Clear existing users to prevent duplicates
+    await User.deleteMany({});
+    console.log("Cleared existing users.");
 
-    await User.insertMany(seedUsers);
+    // ✨ FIX: Hash passwords before inserting users
+    const salt = await bcrypt.genSalt(10);
+    const usersWithHashedPasswords = await Promise.all(
+      seedUsers.map(async (user) => {
+        const hashedPassword = await bcrypt.hash(user.password, salt);
+        return { ...user, password: hashedPassword };
+      })
+    );
+
+    await User.insertMany(usersWithHashedPasswords);
     console.log("Database seeded successfully");
   } catch (error) {
     console.error("Error seeding database:", error);
+  } finally {
+    // Optional: Close the connection after seeding
+    // mongoose.connection.close();
   }
 };
 
