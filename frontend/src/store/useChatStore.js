@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import toast from "react-hot-toast";
+import toast from "react-hot-toast"; // You are already importing this, which is perfect!
 import { axiosInstance } from "../lib/axios";
 import { useAuthStore } from "./useAuthStore";
 
@@ -52,6 +52,10 @@ export const useChatStore = create((set, get) => ({
     socket.on("newMessage", (newMessage) => {
       const isMessageSentFromSelectedUser = newMessage.senderId === selectedUser._id;
       if (!isMessageSentFromSelectedUser) return;
+
+      // This line below shows the notification popup!
+      // ✨ NEW: Add a toast notification when a new message arrives.
+      toast(`${selectedUser.fullName}: ${newMessage.text || "Sent an image"}`);
 
       set({
         messages: [...get().messages, newMessage],
