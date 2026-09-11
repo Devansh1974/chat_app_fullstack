@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import AuthImagePattern from "../components/AuthImagePattern";
 import { Link } from "react-router-dom";
-import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare, Sparkles } from "lucide-react";
+import { Eye, EyeOff, Heart, Loader2, Lock, Mail, Sparkles } from "lucide-react";
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -18,20 +18,29 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="h-screen grid lg:grid-cols-2">
+    <div className="min-h-screen grid lg:grid-cols-2">
       {/* Left Side - Form */}
       <div className="flex flex-col justify-center items-center p-6 sm:p-12">
         <div className="w-full max-w-md space-y-6">
-          {/* Logo */}
-          <div className="text-center mb-6">
+          {/* Cute 3D Character Illustration - Visible on Mobile & Tablet */}
+          <div className="lg:hidden flex flex-col items-center mb-2">
+            <img
+              src="/auth-chat-art.png"
+              alt="Cute characters chatting"
+              className="w-40 sm:w-48 h-auto max-h-44 object-contain drop-shadow-lg select-none pointer-events-none hover:scale-105 transition-transform"
+            />
+          </div>
+
+          {/* Logo & Header */}
+          <div className="text-center mb-4">
             <div className="flex flex-col items-center gap-2 group">
               <img
                 src="/logo.png"
                 alt="Chatty Logo"
-                className="size-16 rounded-2xl object-cover shadow-lg group-hover:scale-105 transition-transform"
+                className="size-14 sm:size-16 object-contain drop-shadow-md group-hover:scale-105 transition-transform"
               />
-              <h1 className="text-2xl font-bold mt-2">Welcome Back</h1>
-              <p className="text-base-content/60">Sign in to your account</p>
+              <h1 className="text-2xl font-bold mt-1">Welcome Back</h1>
+              <p className="text-base-content/60 text-sm">Sign in to your account</p>
             </div>
           </div>
 
@@ -47,7 +56,7 @@ const LoginPage = () => {
                 </div>
                 <input
                   type="email"
-                  className={`input input-bordered w-full pl-10`}
+                  className={`input input-bordered w-full pl-10 focus:outline-none focus:border-primary`}
                   placeholder="you@example.com"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -65,7 +74,7 @@ const LoginPage = () => {
                 </div>
                 <input
                   type={showPassword ? "text" : "password"}
-                  className={`input input-bordered w-full pl-10`}
+                  className={`input input-bordered w-full pl-10 focus:outline-none focus:border-primary`}
                   placeholder="••••••••"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
@@ -148,11 +157,26 @@ const LoginPage = () => {
           </div>
 
           <div className="text-center pt-2">
-            <p className="text-base-content/60">
+            <p className="text-base-content/60 text-sm">
               Don&apos;t have an account?{" "}
-              <Link to="/signup" className="link link-primary">
+              <Link to="/signup" className="link link-primary font-medium">
                 Create account
               </Link>
+            </p>
+          </div>
+
+          {/* Developer Credit Footer */}
+          <div className="text-center pt-4 border-t border-base-300/40">
+            <p className="text-xs text-base-content/60 flex items-center justify-center gap-1">
+              Developed with <Heart className="size-3.5 text-red-500 fill-red-500 animate-pulse" /> by{" "}
+              <a
+                href="https://www.linkedin.com/in/devanshsingh2006"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-primary hover:underline"
+              >
+                Devansh
+              </a>
             </p>
           </div>
         </div>

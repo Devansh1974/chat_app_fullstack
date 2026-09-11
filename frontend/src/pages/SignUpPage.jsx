@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
-import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare, Sparkles, User } from "lucide-react";
+import { Eye, EyeOff, Heart, Loader2, Lock, Mail, Sparkles, User } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import AuthImagePattern from "../components/AuthImagePattern";
@@ -38,21 +38,30 @@ const SignUpPage = () => {
     <div className="min-h-screen grid lg:grid-cols-2">
       {/* left side */}
       <div className="flex flex-col justify-center items-center p-6 sm:p-12">
-        <div className="w-full max-w-md space-y-8">
+        <div className="w-full max-w-md space-y-6">
+          {/* Cute 3D Character Illustration - Visible on Mobile & Tablet */}
+          <div className="lg:hidden flex flex-col items-center mb-2">
+            <img
+              src="/auth-chat-art.png"
+              alt="Cute characters chatting"
+              className="w-40 sm:w-48 h-auto max-h-44 object-contain drop-shadow-lg select-none pointer-events-none hover:scale-105 transition-transform"
+            />
+          </div>
+
           {/* LOGO */}
-          <div className="text-center mb-6">
+          <div className="text-center mb-4">
             <div className="flex flex-col items-center gap-2 group">
               <img
                 src="/logo.png"
                 alt="Chatty Logo"
-                className="size-16 rounded-2xl object-cover shadow-lg group-hover:scale-105 transition-transform"
+                className="size-14 sm:size-16 object-contain drop-shadow-md group-hover:scale-105 transition-transform"
               />
-              <h1 className="text-2xl font-bold mt-2">Create Account</h1>
-              <p className="text-base-content/60">Get started with your free account</p>
+              <h1 className="text-2xl font-bold mt-1">Create Account</h1>
+              <p className="text-base-content/60 text-sm">Get started with your free account</p>
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div className="form-control">
               <label className="label">
                 <span className="label-text font-medium">Full Name</span>
@@ -63,7 +72,7 @@ const SignUpPage = () => {
                 </div>
                 <input
                   type="text"
-                  className={`input input-bordered w-full pl-10`}
+                  className={`input input-bordered w-full pl-10 focus:outline-none focus:border-primary`}
                   placeholder="John Doe"
                   value={formData.fullName}
                   onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
@@ -81,7 +90,7 @@ const SignUpPage = () => {
                 </div>
                 <input
                   type="email"
-                  className={`input input-bordered w-full pl-10`}
+                  className={`input input-bordered w-full pl-10 focus:outline-none focus:border-primary`}
                   placeholder="you@example.com"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -99,7 +108,7 @@ const SignUpPage = () => {
                 </div>
                 <input
                   type={showPassword ? "text" : "password"}
-                  className={`input input-bordered w-full pl-10`}
+                  className={`input input-bordered w-full pl-10 focus:outline-none focus:border-primary`}
                   placeholder="••••••••"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
@@ -162,18 +171,32 @@ const SignUpPage = () => {
           </div>
 
           <div className="text-center pt-2">
-            <p className="text-base-content/60">
+            <p className="text-base-content/60 text-sm">
               Already have an account?{" "}
-              <Link to="/login" className="link link-primary">
+              <Link to="/login" className="link link-primary font-medium">
                 Sign in
               </Link>
+            </p>
+          </div>
+
+          {/* Developer Credit Footer */}
+          <div className="text-center pt-4 border-t border-base-300/40">
+            <p className="text-xs text-base-content/60 flex items-center justify-center gap-1">
+              Developed with <Heart className="size-3.5 text-red-500 fill-red-500 animate-pulse" /> by{" "}
+              <a
+                href="https://www.linkedin.com/in/devanshsingh2006"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-primary hover:underline"
+              >
+                Devansh
+              </a>
             </p>
           </div>
         </div>
       </div>
 
       {/* right side */}
-
       <AuthImagePattern
         title="Join our community"
         subtitle="Connect with friends, share moments, and stay in touch with your loved ones."
