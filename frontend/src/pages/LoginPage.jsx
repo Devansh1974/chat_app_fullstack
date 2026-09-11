@@ -18,12 +18,12 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen grid lg:grid-cols-2">
+    <div className="min-h-screen grid lg:grid-cols-2 pt-16 lg:pt-0">
       {/* Left Side - Form */}
-      <div className="flex flex-col justify-center items-center p-6 sm:p-12">
+      <div className="flex flex-col justify-center items-center p-6 sm:p-12 pt-6 sm:pt-12">
         <div className="w-full max-w-md space-y-6">
           {/* Cute 3D Character Illustration - Visible on Mobile & Tablet */}
-          <div className="lg:hidden flex flex-col items-center mb-1">
+          <div className="lg:hidden flex flex-col items-center mb-1 mt-2">
             <img
               src="/auth-chat-art.png"
               alt="Cute characters chatting"

@@ -1,6 +1,6 @@
 const NoChatSelected = () => {
   return (
-    <div className="w-full flex flex-1 flex-col items-center justify-center p-8 sm:p-16 bg-base-100/50 relative overflow-hidden">
+    <div className="hidden lg:flex w-full flex-1 flex-col items-center justify-center p-8 sm:p-16 bg-base-100/50 relative overflow-hidden">
       {/* Ambient background glow */}
       <div className="absolute top-1/3 left-1/3 size-64 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-1/3 right-1/3 size-64 bg-secondary/10 rounded-full blur-3xl pointer-events-none" />
