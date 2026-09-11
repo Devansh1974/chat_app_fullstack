@@ -34,20 +34,24 @@ const Sidebar = () => {
   if (isUsersLoading) return <SidebarSkeleton />;
 
   return (
-    <aside className="h-full w-20 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200">
+    <aside
+      className={`h-full ${
+        selectedUser ? "hidden lg:flex" : "flex w-full"
+      } lg:w-72 border-r border-base-300 flex-col transition-all duration-200`}
+    >
       <div className="border-b border-base-300 w-full p-4 space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Users className="size-5 text-primary" />
-            <span className="font-semibold hidden lg:block">Contacts</span>
+            <span className="font-semibold">Contacts</span>
           </div>
-          <span className="text-xs text-zinc-500 hidden lg:inline">
+          <span className="text-xs text-zinc-500">
             ({Math.max(0, onlineUsers.length - 1)} online)
           </span>
         </div>
 
-        {/* Contact Search Bar */}
-        <div className="hidden lg:block relative">
+        {/* Contact Search Bar - Available on both Mobile and Desktop */}
+        <div className="relative">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <Search className="size-4 text-base-content/40" />
           </div>
@@ -70,7 +74,7 @@ const Sidebar = () => {
         </div>
 
         {/* Online filter toggle */}
-        <div className="hidden lg:flex items-center gap-2">
+        <div className="flex items-center gap-2">
           <label className="cursor-pointer flex items-center gap-2">
             <input
               type="checkbox"
@@ -98,7 +102,7 @@ const Sidebar = () => {
                 ${selectedUser?._id === user._id ? "bg-base-300 ring-1 ring-base-300" : ""}
               `}
             >
-              <div className="relative mx-auto lg:mx-0">
+              <div className="relative">
                 <img
                   src={user.profilePic || "/avatar.png"}
                   alt={user.fullName}
@@ -110,16 +114,10 @@ const Sidebar = () => {
                     rounded-full ring-2 ring-zinc-900"
                   />
                 )}
-                {/* Mobile unread badge indicator */}
-                {unread > 0 && (
-                  <span className="lg:hidden absolute -top-1 -right-1 size-5 bg-primary text-primary-content text-[10px] font-bold rounded-full flex items-center justify-center">
-                    {unread > 9 ? "9+" : unread}
-                  </span>
-                )}
               </div>
 
-              {/* User info - visible on larger screens */}
-              <div className="hidden lg:flex flex-1 items-center justify-between min-w-0">
+              {/* User info - visible on both mobile (full-width) and desktop */}
+              <div className="flex flex-1 items-center justify-between min-w-0">
                 <div className="text-left min-w-0 flex-1">
                   <div className="font-medium truncate text-sm">{user.fullName}</div>
                   <div className="text-xs truncate">
@@ -133,7 +131,7 @@ const Sidebar = () => {
                   </div>
                 </div>
 
-                {/* Desktop Unread Badge Counter */}
+                {/* Unread Badge Counter */}
                 {unread > 0 && (
                   <span className="badge badge-primary badge-sm font-semibold ml-2">
                     {unread > 99 ? "99+" : unread}

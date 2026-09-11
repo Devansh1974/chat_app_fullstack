@@ -23,21 +23,21 @@ const LoginPage = () => {
       <div className="flex flex-col justify-center items-center p-6 sm:p-12">
         <div className="w-full max-w-md space-y-6">
           {/* Cute 3D Character Illustration - Visible on Mobile & Tablet */}
-          <div className="lg:hidden flex flex-col items-center mb-2">
+          <div className="lg:hidden flex flex-col items-center mb-1">
             <img
               src="/auth-chat-art.png"
               alt="Cute characters chatting"
-              className="w-40 sm:w-48 h-auto max-h-44 object-contain drop-shadow-lg select-none pointer-events-none hover:scale-105 transition-transform"
+              className="w-36 sm:w-44 h-auto max-h-36 object-contain drop-shadow-lg select-none pointer-events-none hover:scale-105 transition-transform"
             />
           </div>
 
-          {/* Logo & Header */}
+          {/* Logo & Header - Inner logo hidden on mobile to avoid duplicate stacking */}
           <div className="text-center mb-4">
             <div className="flex flex-col items-center gap-2 group">
               <img
                 src="/logo.png"
                 alt="Chatty Logo"
-                className="size-14 sm:size-16 object-contain drop-shadow-md group-hover:scale-105 transition-transform"
+                className="hidden lg:block size-14 sm:size-16 object-contain drop-shadow-md group-hover:scale-105 transition-transform"
               />
               <h1 className="text-2xl font-bold mt-1">Welcome Back</h1>
               <p className="text-base-content/60 text-sm">Sign in to your account</p>

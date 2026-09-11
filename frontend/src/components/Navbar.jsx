@@ -17,7 +17,7 @@ const Navbar = () => {
               <img
                 src="/logo.png"
                 alt="Chatty Logo"
-                className="size-9 rounded-xl object-cover shadow-md group-hover:scale-105 transition-transform"
+                className="size-8 sm:size-9 object-contain drop-shadow-md group-hover:scale-105 transition-transform"
               />
               <h1 className="text-lg font-bold tracking-tight">Chatty</h1>
             </Link>
