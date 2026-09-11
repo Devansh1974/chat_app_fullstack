@@ -13,6 +13,9 @@ export const useChatStore = create((set, get) => ({
   isSendingMessage: false,
   typingUsers: {}, // { [userId]: boolean }
   unreadCounts: {}, // { [userId]: number }
+  inChatSearchQuery: "",
+
+  setInChatSearchQuery: (query) => set({ inChatSearchQuery: query }),
 
   getUsers: async () => {
     set({ isUsersLoading: true });
@@ -138,7 +141,7 @@ export const useChatStore = create((set, get) => ({
   },
 
   setSelectedUser: (selectedUser) => {
-    set({ selectedUser });
+    set({ selectedUser, inChatSearchQuery: "" });
     if (selectedUser?._id) {
       get().clearUnread(selectedUser._id);
     }

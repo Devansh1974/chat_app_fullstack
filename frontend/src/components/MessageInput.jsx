@@ -1,7 +1,26 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useChatStore } from "../store/useChatStore";
-import { Image, Loader2, Send, X } from "lucide-react";
+import { Image, Loader2, Send, Smile, X } from "lucide-react";
 import toast from "react-hot-toast";
+
+const EMOJI_CATEGORIES = [
+  {
+    name: "Smileys",
+    emojis: ["😀", "😃", "😄", "😁", "😆", "😅", "😂", "🤣", "😊", "😇", "🥰", "😍", "🤩", "😘", "😋", "😜", "🤪", "😎", "🥳", "😏", "🥺", "😭", "😤", "🤯", "🥶", "🥵", "😴"],
+  },
+  {
+    name: "Gestures",
+    emojis: ["👍", "👎", "👌", "✌️", "🤞", "🤟", "🤙", "👏", "🙌", "👐", "🤝", "🙏", "💪", "👊", "✊", "🫡", "👋", "✍️"],
+  },
+  {
+    name: "Hearts & Fire",
+    emojis: ["❤️", "🧡", "💛", "💚", "💙", "💜", "🖤", "🤍", "💔", "❣️", "💕", "💞", "💓", "💗", "💖", "💘", "🔥", "✨", "💯", "🎉", "🚀", "⭐"],
+  },
+  {
+    name: "Fun & Food",
+    emojis: ["☕", "🍻", "🍕", "🍔", "🍿", "🍩", "⚽", "🏀", "🎮", "🎵", "🎧", "💡", "💰", "👑", "💎", "🎁", "🎈", "🏆"],
+  },
+];
 
 // Client-side image compression to speed up uploads & prevent PayloadTooLarge errors
 const compressImage = (file, maxWidth = 1200, maxHeight = 1200, quality = 0.75) => {
@@ -44,11 +63,29 @@ const MessageInput = () => {
   const [text, setText] = useState("");
   const [imagePreview, setImagePreview] = useState(null);
   const [isCompressing, setIsCompressing] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [activeTab, setActiveTab] = useState(0);
+
   const fileInputRef = useRef(null);
+  const textInputRef = useRef(null);
+  const emojiPickerRef = useRef(null);
   const typingTimeoutRef = useRef(null);
 
   const { sendMessage, isSendingMessage, selectedUser, sendTyping, sendStopTyping } =
     useChatStore();
+
+  // Close emoji picker when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (emojiPickerRef.current && !emojiPickerRef.current.contains(e.target)) {
+        setShowEmojiPicker(false);
+      }
+    };
+    if (showEmojiPicker) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showEmojiPicker]);
 
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
@@ -94,6 +131,14 @@ const MessageInput = () => {
     }
   };
 
+  const handleEmojiSelect = (emoji) => {
+    setText((prev) => prev + emoji);
+    if (selectedUser?._id) {
+      sendTyping(selectedUser._id);
+    }
+    textInputRef.current?.focus();
+  };
+
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if ((!text.trim() && !imagePreview) || isSendingMessage) return;
@@ -101,6 +146,7 @@ const MessageInput = () => {
     // Clear typing timeout immediately
     if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
     if (selectedUser?._id) sendStopTyping(selectedUser._id);
+    setShowEmojiPicker(false);
 
     try {
       await sendMessage({
@@ -118,7 +164,47 @@ const MessageInput = () => {
   };
 
   return (
-    <div className="p-4 w-full">
+    <div className="p-4 w-full relative">
+      {/* Interactive Emoji Picker Popover */}
+      {showEmojiPicker && (
+        <div
+          ref={emojiPickerRef}
+          className="absolute bottom-20 left-4 bg-base-100 border border-base-300 rounded-2xl shadow-2xl p-3 w-72 sm:w-80 z-30 animate-in fade-in zoom-in-95 duration-150"
+        >
+          {/* Category Tabs */}
+          <div className="flex border-b border-base-300 pb-2 mb-2 gap-1 overflow-x-auto text-xs">
+            {EMOJI_CATEGORIES.map((cat, idx) => (
+              <button
+                key={cat.name}
+                type="button"
+                onClick={() => setActiveTab(idx)}
+                className={`px-2 py-1 rounded-md transition-colors whitespace-nowrap ${
+                  activeTab === idx
+                    ? "bg-primary text-primary-content font-medium"
+                    : "text-base-content/70 hover:bg-base-200"
+                }`}
+              >
+                {cat.name}
+              </button>
+            ))}
+          </div>
+
+          {/* Emoji Grid */}
+          <div className="grid grid-cols-7 gap-1 max-h-48 overflow-y-auto p-1">
+            {EMOJI_CATEGORIES[activeTab].emojis.map((emoji) => (
+              <button
+                key={emoji}
+                type="button"
+                onClick={() => handleEmojiSelect(emoji)}
+                className="text-xl p-1.5 rounded-lg hover:bg-base-200 hover:scale-125 transition-transform flex items-center justify-center"
+              >
+                {emoji}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       {imagePreview && (
         <div className="mb-3 flex items-center gap-2">
           <div className="relative">
@@ -147,6 +233,7 @@ const MessageInput = () => {
       <form onSubmit={handleSendMessage} className="flex items-center gap-2">
         <div className="flex-1 flex gap-2">
           <input
+            ref={textInputRef}
             type="text"
             className="w-full input input-bordered rounded-lg input-sm sm:input-md focus:outline-none focus:border-primary"
             placeholder="Type a message..."
@@ -163,12 +250,26 @@ const MessageInput = () => {
             disabled={isSendingMessage}
           />
 
+          {/* Emoji Picker Button */}
+          <button
+            type="button"
+            className={`btn btn-circle btn-ghost btn-sm sm:btn-md ${
+              showEmojiPicker ? "text-primary bg-base-200" : "text-base-content/60"
+            }`}
+            onClick={() => setShowEmojiPicker((prev) => !prev)}
+            title="Add Emoji"
+          >
+            <Smile size={20} />
+          </button>
+
+          {/* Image Attachment Button */}
           <button
             type="button"
             className={`hidden sm:flex btn btn-circle btn-ghost
-                     ${imagePreview ? "text-emerald-500" : "text-zinc-400"}`}
+                     ${imagePreview ? "text-emerald-500" : "text-base-content/60"}`}
             onClick={() => fileInputRef.current?.click()}
             disabled={isSendingMessage}
+            title="Attach Image"
           >
             {isCompressing ? <Loader2 className="size-5 animate-spin" /> : <Image size={20} />}
           </button>
