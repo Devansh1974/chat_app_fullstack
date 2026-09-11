@@ -45,7 +45,38 @@ const App = () => {
         <Route path="/profile" element={authUser ? <ProfilePage /> : <Navigate to="/login" />} />
       </Routes>
 
-      <Toaster />
+      <Toaster
+        position="top-center"
+        containerStyle={{
+          top: 72,
+        }}
+        gutter={8}
+        toastOptions={{
+          className: "!text-xs sm:!text-sm !py-2 !px-4 !rounded-full !shadow-2xl backdrop-blur-md",
+          duration: 2500,
+          style: {
+            background: "rgba(24, 24, 27, 0.95)",
+            color: "#f4f4f5",
+            border: "1px solid rgba(255, 255, 255, 0.12)",
+            fontSize: "13px",
+            fontWeight: "500",
+            maxWidth: "90vw",
+            boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5)",
+          },
+          success: {
+            iconTheme: {
+              primary: "#22c55e",
+              secondary: "#18181b",
+            },
+          },
+          error: {
+            iconTheme: {
+              primary: "#ef4444",
+              secondary: "#18181b",
+            },
+          },
+        }}
+      />
     </div>
   );
 };
