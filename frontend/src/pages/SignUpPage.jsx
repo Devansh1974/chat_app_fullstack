@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
-import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare, User } from "lucide-react";
+import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare, Sparkles, User } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import AuthImagePattern from "../components/AuthImagePattern";
@@ -14,7 +14,7 @@ const SignUpPage = () => {
     password: "",
   });
 
-  const { signup, isSigningUp } = useAuthStore();
+  const { signup, isSigningUp, guestLogin, isLoggingInGuest } = useAuthStore();
 
   const validateForm = () => {
     if (!formData.fullName.trim()) return toast.error("Full name is required");
@@ -119,7 +119,7 @@ const SignUpPage = () => {
               </div>
             </div>
 
-            <button type="submit" className="btn btn-primary w-full" disabled={isSigningUp}>
+            <button type="submit" className="btn btn-primary w-full" disabled={isSigningUp || isLoggingInGuest}>
               {isSigningUp ? (
                 <>
                   <Loader2 className="size-5 animate-spin" />
@@ -131,7 +131,38 @@ const SignUpPage = () => {
             </button>
           </form>
 
-          <div className="text-center">
+          {/* Quick Demo / Guest Access */}
+          <div className="space-y-3">
+            <div className="relative my-2">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-base-300" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-base-100 px-2 text-base-content/60 font-medium">Or Explore Immediately</span>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => guestLogin("guest")}
+              disabled={isLoggingInGuest || isSigningUp}
+              className="btn btn-outline btn-secondary w-full gap-2 shadow-sm"
+            >
+              {isLoggingInGuest ? (
+                <>
+                  <Loader2 className="size-5 animate-spin" />
+                  Logging in as Guest...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="size-5 text-secondary" />
+                  Continue as Guest
+                </>
+              )}
+            </button>
+          </div>
+
+          <div className="text-center pt-2">
             <p className="text-base-content/60">
               Already have an account?{" "}
               <Link to="/login" className="link link-primary">

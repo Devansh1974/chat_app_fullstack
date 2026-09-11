@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import AuthImagePattern from "../components/AuthImagePattern";
 import { Link } from "react-router-dom";
-import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare } from "lucide-react";
+import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare, Sparkles } from "lucide-react";
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -10,7 +10,7 @@ const LoginPage = () => {
     email: "",
     password: "",
   });
-  const { login, isLoggingIn } = useAuthStore();
+  const { login, isLoggingIn, guestLogin, isLoggingInGuest } = useAuthStore();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,9 +21,9 @@ const LoginPage = () => {
     <div className="h-screen grid lg:grid-cols-2">
       {/* Left Side - Form */}
       <div className="flex flex-col justify-center items-center p-6 sm:p-12">
-        <div className="w-full max-w-md space-y-8">
+        <div className="w-full max-w-md space-y-6">
           {/* Logo */}
-          <div className="text-center mb-8">
+          <div className="text-center mb-6">
             <div className="flex flex-col items-center gap-2 group">
               <div
                 className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20
@@ -37,7 +37,7 @@ const LoginPage = () => {
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div className="form-control">
               <label className="label">
                 <span className="label-text font-medium">Email</span>
@@ -85,7 +85,7 @@ const LoginPage = () => {
               </div>
             </div>
 
-            <button type="submit" className="btn btn-primary w-full" disabled={isLoggingIn}>
+            <button type="submit" className="btn btn-primary w-full" disabled={isLoggingIn || isLoggingInGuest}>
               {isLoggingIn ? (
                 <>
                   <Loader2 className="h-5 w-5 animate-spin" />
@@ -97,7 +97,58 @@ const LoginPage = () => {
             </button>
           </form>
 
-          <div className="text-center">
+          {/* Quick Demo & Guest Access */}
+          <div className="space-y-3">
+            <div className="relative my-2">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-base-300" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-base-100 px-2 text-base-content/60 font-medium">Or Quick Demo Access</span>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => guestLogin("guest")}
+              disabled={isLoggingInGuest || isLoggingIn}
+              className="btn btn-outline btn-secondary w-full gap-2 shadow-sm"
+            >
+              {isLoggingInGuest ? (
+                <>
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                  Logging in as Guest...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="h-5 w-5 text-secondary" />
+                  Continue as Guest
+                </>
+              )}
+            </button>
+
+            <div className="flex items-center justify-center gap-2 pt-1 flex-wrap">
+              <span className="text-xs text-base-content/60">Try seeded accounts:</span>
+              <button
+                type="button"
+                onClick={() => guestLogin("priya")}
+                disabled={isLoggingInGuest || isLoggingIn}
+                className="badge badge-outline hover:badge-primary text-xs cursor-pointer py-2 px-2.5 transition-colors"
+              >
+                Priya
+              </button>
+              <button
+                type="button"
+                onClick={() => guestLogin("rohan")}
+                disabled={isLoggingInGuest || isLoggingIn}
+                className="badge badge-outline hover:badge-primary text-xs cursor-pointer py-2 px-2.5 transition-colors"
+              >
+                Rohan
+              </button>
+            </div>
+          </div>
+
+          <div className="text-center pt-2">
             <p className="text-base-content/60">
               Don&apos;t have an account?{" "}
               <Link to="/signup" className="link link-primary">

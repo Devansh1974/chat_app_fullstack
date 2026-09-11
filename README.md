@@ -1,8 +1,8 @@
-# 💬 Chatty - Real-Time MERN Chat Application
+# 💬 Chatty - Real-Time Full-Stack Chat Application
 
-**Chatty** is a modern, full-stack real-time chat application built using the **MERN** stack (MongoDB, Express.js, React.js, Node.js) with **Socket.IO** for instant messaging. It supports private chats, group messaging, media sharing (images), typing indicators, and theme customization.
+**Chatty** is a modern, high-performance, real-time chat application built using the **PERN** stack (**PostgreSQL**, **Express.js**, **React.js**, **Node.js**) with **Prisma ORM** and **Socket.IO** for instant, low-latency messaging.
 
-🚀 Try it live: [https://chatty-onlinechattingapp.onrender.com]
+🚀 **Live Demo:** [https://chatty-onlinechattingapp.onrender.com](https://chatty-onlinechattingapp.onrender.com)
 
 ---
 
@@ -12,128 +12,130 @@
 ![Settings](frontend/assets/setting.png)
 ![Themes](frontend/assets/themes.png)
 
-
 ---
 
-## ✨ Features
+## ✨ Features & Upgrades
 
-- ⚡ Real-time messaging with **Socket.IO**
-- 🔐 Secure authentication with **JWT** & **bcrypt**
-- 🧑‍🤝‍🧑 Support for **one-on-one & group chats**
-- 📤 Send and receive **images**
-- 🧑‍🎨 **User profiles** with avatars
-- ⌨️ Typing indicators for live typing feedback
-- 🔍 Search users and groups easily
-- 🌓 Theme switching with **Daisy UI**
-- 📱 Fully **responsive** design (mobile + desktop)
-- 🔔 In-app **notifications**
-- ☁️ Image storage with **Cloudinary**
-- ⚙️ Global state managed with **Zustand**
+- ⚡ **Instant Real-Time Messaging:** Powered by **Socket.IO** with bi-directional event streaming.
+- 🐘 **PostgreSQL & Prisma ORM:** Strict relational integrity with foreign keys, composite indexing, and type-safe database queries.
+- 👤 **1-Click "Continue as Guest" Access:** Explore the full application instantly without registration or email verification.
+- 👥 **Quick Demo Account Switcher:** One-click login as seeded demo users (*Priya*, *Rohan*) for easy dual-window real-time testing.
+- ⌨️ **Live Typing Indicators:** Dual visual feedback with header status and animated 3-dot typing bubbles.
+- 🔔 **In-App Audio Chimes:** Crystal-clear harmonic notification sounds generated using the **Web Audio API** (zero external assets required).
+- 🔴 **Unread Message Badges:** Real-time badge counters track unseen incoming messages per conversation.
+- 🔍 **Contact Search Filter:** Instantly filter contacts by name directly in the sidebar.
+- 🖼️ **Client-Side Image Optimization:** Auto-resizes high-resolution camera photos via HTML5 Canvas before upload to prevent payload errors and accelerate Cloudinary delivery.
+- 🎨 **32 Dynamic DaisyUI Themes:** Full dark/light/retro/cyberpunk theme customization with instant preview.
+- 📱 **Fully Responsive:** Seamless layout crafted for mobile devices, tablets, and desktops.
 
 ---
 
 ## 🧑‍💻 Tech Stack
 
-| Layer        | Tech Stack                         |
-|--------------|------------------------------------|
-| Frontend     | React.js, Tailwind CSS, Daisy UI, Axios |
-| Backend      | Node.js, Express.js                |
-| Database     | MongoDB, Mongoose                  |
-| Real-time    | Socket.IO                          |
-| Authentication | JWT, bcrypt                     |
-| File Uploads | Cloudinary                         |
-| State Management | Zustand                       |
+| Layer | Technology |
+| :--- | :--- |
+| **Frontend** | React 18, Vite, Tailwind CSS, DaisyUI, Axios, Lucide Icons |
+| **Backend** | Node.js, Express.js |
+| **Database** | PostgreSQL, Prisma ORM (Hosted on Neon Serverless) |
+| **WebSockets** | Socket.IO |
+| **Authentication** | JWT (JSON Web Tokens), HttpOnly Secure Cookies, bcryptjs |
+| **Media Storage** | Cloudinary API |
+| **State Management** | Zustand |
 
 ---
 
 ## 🛠️ Getting Started
 
 ### ⚙️ Prerequisites
-
-Make sure you have the following installed:
-- Node.js (v14+)
-- npm or yarn
-- MongoDB (local or Atlas)
+- [Node.js](https://nodejs.org/) (v18+ recommended)
+- A free PostgreSQL connection string (e.g. from [Neon.tech](https://neon.tech) or Supabase)
+- Cloudinary account for media attachments
 
 ---
 
 ### 🔧 Installation
 
-```bash
-# Clone the repository
-git clone <repository-url>
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/Devansh1974/chat_app_fullstack.git
+   cd chat_app_fullstack
+   ```
 
-# Navigate into the project
-cd chatty-app
+2. **Install all dependencies:**
+   ```bash
+   npm install --prefix backend
+   npm install --prefix frontend
+   ```
 
-# Install dependencies
-npm install
-```
+3. **Configure Environment Variables:**
+   Create a `.env` file inside `backend/` (refer to `backend/.env.example`):
+   ```env
+   PORT=5001
+   NODE_ENV=development
+   JWT_SECRET=your_jwt_secret_key
+
+   # PostgreSQL Connection String (Neon.tech or Supabase)
+   DATABASE_URL="postgresql://username:password@ep-something.us-east-2.aws.neon.tech/neondb?sslmode=require"
+
+   # Cloudinary Credentials
+   CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+   CLOUDINARY_API_KEY=your_cloudinary_api_key
+   CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+   ```
+
+4. **Push Database Schema & Seed Demo Users:**
+   ```bash
+   # Push tables (User, Message) to PostgreSQL
+   npm run db:push --prefix backend
+
+   # Seed demo accounts
+   npm run seed --prefix backend
+   ```
+
+5. **Start Local Development Servers:**
+   ```bash
+   # Start backend (http://localhost:5001)
+   npm run dev --prefix backend
+
+   # In a new terminal, start frontend (http://localhost:5173)
+   npm run dev --prefix frontend
+   ```
+
+6. **Open Visual Database GUI (Prisma Studio):**
+   ```bash
+   npm run db:studio --prefix backend
+   ```
+   Open `http://localhost:5555` to view, query, and edit your live PostgreSQL database records.
 
 ---
 
-### 📁 Environment Variables
+## ☁️ Deployment (e.g. Render / Railway)
 
-Create a `.env` file in the root directory and add the following:
-
-```env
-MONGODB_URI=your_mongodb_connection_string
-PORT=5001
-JWT_SECRET=your_jwt_secret_key
-
-CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
-CLOUDINARY_API_KEY=your_cloudinary_api_key
-CLOUDINARY_API_SECRET=your_cloudinary_api_secret
-
-NODE_ENV=development
-```
-
----
-
-### 🚀 Run the App
-
-```bash
-# Build the frontend
-npm run build
-
-# Start the server
-npm start
-```
-
-Open your browser and go to: `http://localhost:5001`
-
----
-
-## 🤝 Contributing
-
-Want to contribute? Here’s how you can help:
-
-1. Fork the repository
-2. Create your feature branch: `git checkout -b feature/YourFeature`
-3. Commit your changes: `git commit -m 'Add your feature'`
-4. Push to the branch: `git push origin feature/YourFeature`
-5. Open a pull request
+1. Connect your repository to **Render** as a Web Service.
+2. Set the build command:
+   ```bash
+   npm run build
+   ```
+3. Set the start command:
+   ```bash
+   npm start
+   ```
+4. In the **Environment** settings, add:
+   - `DATABASE_URL` (Your Neon PostgreSQL connection string)
+   - `JWT_SECRET`
+   - `CLOUDINARY_CLOUD_NAME`
+   - `CLOUDINARY_API_KEY`
+   - `CLOUDINARY_API_SECRET`
+   - `NODE_ENV=production`
 
 ---
 
 ## 📄 License
 
-This project is open source.
+This project is open source and available under the [ISC License](LICENSE).
 
 ---
 
-## 🙌 Acknowledgements
+## 👨‍💻 Author
 
-- [React](https://reactjs.org/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Socket.IO](https://socket.io/)
-- [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
-- [Cloudinary](https://cloudinary.com/)
-- [Daisy UI](https://daisyui.com/)
-- [Zustand](https://github.com/pmndrs/zustand)
-
----
-
-## 👨‍💻 Made with ❤️ by [Devansh Singh](https://www.linkedin.com/in/devanshsingh2006)
-
----
+Crafted by **[Devansh Singh](https://www.linkedin.com/in/devanshsingh2006)**

@@ -4,27 +4,58 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import path from "path";
 
-import { connectDB } from "./lib/db.js";
+import prisma from "./lib/prisma.js";
 import authRoutes from "./routes/auth.route.js";
 import messageRoutes from "./routes/message.route.js";
 import { app, server } from "./lib/socket.js";
 
 dotenv.config();
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5001;
 const __dirname = path.resolve();
 
-// 🛠️ FIX: Increased the payload size limit for JSON requests
-// This will solve the "PayloadTooLargeError" when uploading images.
+// Increased payload size limit for image uploads
 app.use(express.json({ limit: "10mb" }));
 
 app.use(cookieParser());
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:3000",
+  process.env.CLIENT_URL,
+].filter(Boolean);
+
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: (origin, callback) => {
+      // Allow requests with no origin (curl, same-origin static frontend, etc.)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.length === 0 || allowedOrigins.includes(origin) || process.env.NODE_ENV !== "production") {
+        return callback(null, true);
+      }
+      return callback(null, true);
+    },
     credentials: true,
   })
 );
+
+// Diagnostic Health Check Route
+app.get("/api/health", async (req, res) => {
+  let dbStatus = "connected";
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+  } catch (err) {
+    dbStatus = `disconnected (${err.message})`;
+  }
+
+  res.status(200).json({
+    status: "ok",
+    database: "postgresql",
+    databaseStatus: dbStatus,
+    environment: process.env.NODE_ENV || "development",
+    timestamp: new Date().toISOString(),
+  });
+});
 
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
@@ -37,7 +68,12 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-server.listen(PORT, () => {
-  console.log("server is running on PORT:" + PORT);
-  connectDB();
+server.listen(PORT, async () => {
+  console.log(`Server is running on PORT: ${PORT}`);
+  try {
+    await prisma.$connect();
+    console.log("PostgreSQL connected successfully via Prisma!");
+  } catch (err) {
+    console.error("PostgreSQL connection error:", err.message);
+  }
 });

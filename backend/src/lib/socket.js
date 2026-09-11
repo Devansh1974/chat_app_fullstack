@@ -7,7 +7,11 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:5173"],
+    origin: (origin, callback) => {
+      // Allow any origin if in development or matching CLIENT_URL, or allow all for web clients
+      callback(null, true);
+    },
+    credentials: true,
   },
 });
 
@@ -26,6 +30,21 @@ io.on("connection", (socket) => {
 
   // io.emit() is used to send events to all the connected clients
   io.emit("getOnlineUsers", Object.keys(userSocketMap));
+
+  // Handle real-time typing indicators
+  socket.on("typing", ({ receiverId }) => {
+    const receiverSocketId = getReceiverSocketId(receiverId);
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("userTyping", { senderId: userId });
+    }
+  });
+
+  socket.on("stopTyping", ({ receiverId }) => {
+    const receiverSocketId = getReceiverSocketId(receiverId);
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("userStoppedTyping", { senderId: userId });
+    }
+  });
 
   socket.on("disconnect", () => {
     console.log("A user disconnected", socket.id);

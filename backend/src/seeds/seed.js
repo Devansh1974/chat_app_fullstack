@@ -1,7 +1,6 @@
 import { config } from "dotenv";
 import bcrypt from "bcryptjs";
-import { connectDB } from "../lib/db.js";
-import User from "../models/user.model.js";
+import prisma from "../lib/prisma.js";
 
 config();
 
@@ -13,7 +12,6 @@ const seedUsers = [
     password: "123456",
     profilePic: "https://randomuser.me/api/portraits/women/1.jpg",
   },
-
   {
     email: "sneha@example.com",
     fullName: "Sneha Patel",
@@ -40,14 +38,12 @@ const seedUsers = [
   },
 
   // Male Users
-
   {
     email: "vikram@example.com",
     fullName: "Vikram Rathore",
     password: "123456",
     profilePic: "https://randomuser.me/api/portraits/men/2.jpg",
   },
-
   {
     email: "karan@example.com",
     fullName: "Karan Malhotra",
@@ -64,12 +60,11 @@ const seedUsers = [
 
 const seedDatabase = async () => {
   try {
-    await connectDB();
-    // ‼️ IMPORTANT: Clear existing users to prevent duplicates
-    await User.deleteMany({});
-    console.log("Cleared existing users.");
+    console.log("Seeding PostgreSQL database...");
+    await prisma.message.deleteMany();
+    await prisma.user.deleteMany();
+    console.log("Cleared existing data.");
 
-    // ✨ FIX: Hash passwords before inserting users
     const salt = await bcrypt.genSalt(10);
     const usersWithHashedPasswords = await Promise.all(
       seedUsers.map(async (user) => {
@@ -78,15 +73,16 @@ const seedDatabase = async () => {
       })
     );
 
-    await User.insertMany(usersWithHashedPasswords);
-    console.log("Database seeded successfully");
+    await prisma.user.createMany({
+      data: usersWithHashedPasswords,
+    });
+
+    console.log("PostgreSQL database seeded successfully!");
   } catch (error) {
     console.error("Error seeding database:", error);
   } finally {
-    // Optional: Close the connection after seeding
-    // mongoose.connection.close();
+    await prisma.$disconnect();
   }
 };
 
-// Call the function
 seedDatabase();

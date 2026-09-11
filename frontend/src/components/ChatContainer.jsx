@@ -13,25 +13,21 @@ const ChatContainer = () => {
     getMessages,
     isMessagesLoading,
     selectedUser,
-    subscribeToMessages,
-    unsubscribeFromMessages,
+    typingUsers,
   } = useChatStore();
   const { authUser } = useAuthStore();
   const messageEndRef = useRef(null);
+  const isTyping = typingUsers[selectedUser._id];
 
   useEffect(() => {
     getMessages(selectedUser._id);
-
-    subscribeToMessages();
-
-    return () => unsubscribeFromMessages();
-  }, [selectedUser._id, getMessages, subscribeToMessages, unsubscribeFromMessages]);
+  }, [selectedUser._id, getMessages]);
 
   useEffect(() => {
-    if (messageEndRef.current && messages) {
+    if (messageEndRef.current) {
       messageEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [messages]);
+  }, [messages, isTyping]);
 
   if (isMessagesLoading) {
     return (
@@ -83,6 +79,27 @@ const ChatContainer = () => {
             </div>
           </div>
         ))}
+
+        {/* Real-time typing bubble */}
+        {isTyping && (
+          <div className="chat chat-start">
+            <div className="chat-image avatar">
+              <div className="size-10 rounded-full border">
+                <img
+                  src={selectedUser.profilePic || "/avatar.png"}
+                  alt={selectedUser.fullName}
+                />
+              </div>
+            </div>
+            <div className="chat-bubble flex items-center gap-1.5 py-3 px-4 bg-base-200 text-base-content shadow-sm">
+              <span className="size-2 bg-primary/70 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+              <span className="size-2 bg-primary/70 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+              <span className="size-2 bg-primary/70 rounded-full animate-bounce"></span>
+            </div>
+          </div>
+        )}
+
+        <div ref={messageEndRef} />
       </div>
 
       <MessageInput />
